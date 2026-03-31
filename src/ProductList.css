@@ -12,7 +12,7 @@ body {
 
 /* Navbar */
 .navbar {
-    background-color: #4CAF50;
+    background-color: #4CAF50; 
     color: #fff!important;
     padding: 15px;
     display: flex;
