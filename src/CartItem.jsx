@@ -1,62 +1,73 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeItem, updateQuantity } from './CartSlice';
-import './CartItem.css';
+import './CartItem.css'; 
 
 const CartItem = ({ onContinueShopping }) => {
-  const cart = useSelector(state => state.cart.items);
+  //Pull all data from the Global Redux Store 
+  const cart = useSelector((state) => state.cart.items); //Point to the items array defined in CartSlice
+  //Send action to the Redux Store
   const dispatch = useDispatch();
-}
 
-  // Calculate total amount for all products in the cart
+
+//Calculate Total Cart Amount
   const calculateTotalAmount = () => {
         let totalCost = 0;
-            plantsArray.forEach((item) => {
-                totalCost += item.cost * item.quantity;
+            cart.forEach((item) => {
+
+            totalCost += Number(item.cost.replace(/[^0-9.-]+/g, '')) * item.quantity;
+            });
     return totalCost;
-    });
+    };
 
-//Return to the plan listing page to continue shopping
-   const handleContinueShopping = (e) => {
+ cart.forEach((item) => {
+  console.log('item', item, 'cost:', item.cost, 'quantity:', item.quantity);
+});
+// Return to the plan listing page to continue shopping
+   function handleContinueShopping(e) {
     e.preventDefault();
-    setShowCart(false);
-  };
+    onContinueShopping();
+  }
 
+  //checkout button
   const handleCheckoutShopping = (e) => {
   alert('Functionality to be added for future reference');
 };
 
-
+  //Increment quantity
   const handleIncrement = (item) => {
     if (item.quantity >= 0) {
-        dispatch(updateQuantity(item.name, item.quantity + 1));
+        dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
+
       }
   };
 
+  //decrement quantity
   const handleDecrement = (item) => {
     if (item.quantity > 0) {
-        dispatch(updateQuantity(item.name, item.quantity - 1));
+        dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 }));
+
       }
   };
 
+  //Remove plant from the cart 
   const handleRemove = (item) => {
-    if (item.quantity = 0) {
-        dispatch(removeItem(item.name));
+    if (item.quantity === 0) {
+        dispatch(removeItem({name:item.name}));
       }
   };
 
-  // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
-    itemCost = item.cost * item.quantity;
-    return itemCost; 
-  };
+  const itemCost =Number(item.cost.replace(/[^0-9.-]+/g, '')) * item.quantity;
+  return itemCost;
+};
  
 
   return (
     <div className="cart-container">
       <h2 style={{ color: 'black' }}>Total Cart Amount: ${calculateTotalAmount()}</h2>
       <div>
-        {cart.map(item => (
+        {cart.map((item) => ( 
           <div className="cart-item" key={item.name}>
             <img className="cart-item-image" src={item.image} alt={item.name} />
             <div className="cart-item-details">
@@ -74,15 +85,15 @@ const CartItem = ({ onContinueShopping }) => {
         ))}
       </div>
       <div style={{ marginTop: '20px', color: 'black' }} className='total_cart_amount'></div>
+
       <div className="continue_shopping_btn">
         <button className="get-started-button" onClick={(e) => handleContinueShopping(e)}>Continue Shopping</button>
+
         <br />
-        <button className="get-started-button1">Checkout</button>
+        <button className="get-started-button1" onClick={(e) => handleCheckoutShopping(e)}>Checkout</button>
       </div>
+
     </div>
   );
 };
-
 export default CartItem;
-
-
